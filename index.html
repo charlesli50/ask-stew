@@ -193,76 +193,15 @@
   </main>
 
 
+<script src="stew-dialogue.js"></script>
 <script>
 (() => {
   const $ = id => document.getElementById(id);
   const stage = $('stage'), stew = $('stew'), mooBox = $('moo'), mooText = $('mooText'),
         form = $('form'), input = $('q'), btn = $('ask'), ponderText = $('ponderText');
 
-  const ponders = [
-    'hmm…', 'chewing on it…', 'asking the grass…', 'thinking hard…',
-    'asking other cows…', 'ruminating…', 'mooditating…', 'checking the barn…',
-  ];
-
-  const yes = [
-    'Moo! Yes. Absolutely yes.',
-    'Mooo-hoo! Definitely.',
-    'The grass says yes. Moo.',
-    'Moo. Without a doubt.',
-    'Yes! Stew is certain. Moooo.',
-    'All signs point to moo. (That means yes.)',
-    'Moo moo! It is udderly certain.',
-  ];
-  const no = [
-    'Moo… no. Sorry, friend.',
-    'Stew says no. Moo.',
-    'Mmmoo-nope.',
-    'Not a chance. Moo.',
-    'The pasture says no. Moo.',
-  ];
-  const maybe = [
-    'Moo? Ask again after snack time.',
-    'Hmm. Moo-be.',
-    'Stew is not sure. Stew is a cow. Moo.',
-    'Too foggy in the field to tell. Moo.',
-    'Ask me later. I am chewing. Moo.',
-    'Perhaps! Moo-ve forward and see.',
-  ];
-  const general = [
-    'Moo. The answer is grass. It is always grass.',
-    'Moooo. Take a nap and it will all make sense.',
-    'Moo! Be kind, drink water, and eat your greens.',
-    'Stew has thought about it. Stew says: moo.',
-    'Moo. Follow your heart. And maybe a snack.',
-    'Mooo… the answer lies within the barn of your soul.',
-    'Moo moo. That is a cow secret.',
-    'Moo! You already know the answer, friend.',
-    'Moo. Stew believes in you.',
-    'Mooooooo. (Stew is very moved by this question.)',
-    'Moo. Hugs fix most things.',
-    'Moo. Ask a horse. Just kidding. Moo.',
-  ];
-  const special = [
-    [/\b(who are you|what are you|your name)\b/i, ['Moo! I am Stew. A cow. Fluffy, blue-spotted, wise.']],
-    [/\b(love|like) (me|you)\b/i, ['Moo! Stew loves you very much. 💙', 'Mooo. Of course. Big cow hug.']],
-    [/\b(hi|hello|hey|howdy)\b/i, ['Moo! Hello friend!', 'Moooo! Hi hi!']],
-    [/\b(hungry|food|eat|dinner|lunch|breakfast|snack)\b/i, ['Moo. Grass. The answer is grass.', 'Moo! Eat something tasty. Stew recommends clover.']],
-    [/\b(cute|adorable|fluffy|sweet)\b/i, ['Moo! *blushes in cow*', 'Mooo. Stew knows. 💙']],
-    [/\b(meaning of life)\b/i, ['Moo. 42 blades of grass.']],
-    [/\bmoo+\b/i, ['MOO! MOOOO MOO.', 'Moo moo moo. (Stew agrees.)']],
-  ];
-
-  const pick = arr => arr[Math.floor(Math.random() * arr.length)];
-
-  function answer(q) {
-    for (const [re, opts] of special) if (re.test(q)) return pick(opts);
-    const yn = /^(is|are|am|will|would|should|can|could|do|does|did|have|has|was|were|shall|may|might)\b/i;
-    if (yn.test(q.trim())) {
-      const r = Math.random();
-      return r < .45 ? pick(yes) : r < .75 ? pick(maybe) : pick(no);
-    }
-    return pick(general);
-  }
+  const S = window.STEW;
+  const pick = arr => S.pick(arr);
 
   // ---- Moo sound (tiny WebAudio synth) ----
   let ctx;
@@ -335,19 +274,19 @@
     stage.classList.remove('mooing');
     stage.classList.add('pondering');
     mooText.textContent = '…';
-    const ponderTimer = setInterval(() => ponderText.textContent = pick(ponders), 900);
-    ponderText.textContent = pick(ponders);
-    await sleep(1800 + Math.random() * 1400);
+    const ponderTimer = setInterval(() => ponderText.textContent = pick(S.ponders), 900);
+    ponderText.textContent = pick(S.ponders);
+    await sleep(S.ponderTime.min + Math.random() * (S.ponderTime.max - S.ponderTime.min));
     clearInterval(ponderTimer);
 
     // 2. think of answer → moo
-    const a = answer(q);
+    const a = S.answer(q);
     stage.classList.remove('pondering');
     void stage.offsetWidth;
     stage.classList.add('mooing');
     mooBox.classList.remove('pop'); void mooBox.offsetWidth; mooBox.classList.add('pop');
     mooSound();
-    floaters(['moo!', '💙', 'moo', '✨', 'MOO']);
+    floaters(S.mooFloaters);
     await typeOut(a);
     setTimeout(() => stage.classList.remove('mooing'), 600);
 
@@ -361,7 +300,7 @@
   stew.addEventListener('click', () => {
     if (busy) return;
     stew.classList.remove('boop'); void stew.offsetWidth; stew.classList.add('boop');
-    floaters(['💙', 'boop!']);
+    floaters(S.boopFloaters);
   });
 })();
 </script>
