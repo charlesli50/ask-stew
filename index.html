@@ -30,23 +30,29 @@
     font-family: "Fredoka", system-ui, sans-serif;
     color: var(--ink);
     display: flex; flex-direction: column; align-items: center;
-    min-height: 100%;
-    overflow-x: hidden;
+    height: 100vh; height: 100dvh;
+    overflow: hidden;
   }
   h1 {
-    margin: 24px 16px 0; font-weight: 700; font-size: clamp(28px, 6vw, 44px);
+    margin: clamp(10px, 3dvh, 28px) 16px 0; font-weight: 700; font-size: clamp(26px, min(7vw, 5.5dvh), 44px);
     color: var(--pink-dark); letter-spacing: .5px; text-align: center;
     text-shadow: 3px 3px 0 #fff;
   }
-  .sub { margin: 4px 16px 0; color: var(--blue); font-size: 16px; text-align: center; }
+  .sub { margin: 2px 16px 0; color: var(--blue); font-size: clamp(13px, 2.2dvh, 16px); text-align: center; }
 
-  main { width: 100%; max-width: 560px; padding: 0 16px 40px; display: flex; flex-direction: column; align-items: center; }
+  main {
+    width: 100%; max-width: 560px; flex: 1; min-height: 0;
+    padding: 0 16px max(16px, env(safe-area-inset-bottom));
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
 
   /* ---------- Stage ---------- */
-  .stage { position: relative; width: min(340px, 78vw); margin-top: 120px; }
+  .stage { position: relative; width: fit-content; margin-top: clamp(60px, 11dvh, 100px); flex-shrink: 0; }
   .stew-wrap { position: relative; transform-origin: 50% 100%; animation: breathe 3.2s ease-in-out infinite; cursor: pointer; }
   .stew {
-    display: block; width: 100%; height: auto; user-select: none; -webkit-user-drag: none;
+    display: block; width: auto; max-width: 70vw; object-fit: contain;
+    height: clamp(110px, calc(100dvh - 420px), 360px);
+    user-select: none; -webkit-user-drag: none;
     transform-origin: 50% 90%;
     animation: sway 5s ease-in-out infinite;
     filter: drop-shadow(0 10px 0 rgba(217,79,140,.18));
@@ -83,12 +89,12 @@
 
   /* ---------- Thought bubble ---------- */
   .thought {
-    position: absolute; right: -4%; top: -96px; opacity: 0; transform: scale(.6); transform-origin: 20% 100%;
+    position: absolute; right: -14%; top: clamp(-84px, -10dvh, -50px); z-index: 2; opacity: 0; transform: scale(.6); transform-origin: 20% 100%;
     transition: opacity .25s, transform .3s cubic-bezier(.3,1.5,.5,1); pointer-events: none;
   }
   .stage.pondering .thought { opacity: 1; transform: scale(1); }
   .cloud {
-    background: #fff; border-radius: 40px; padding: 14px 22px; font-size: 28px; font-weight: 700;
+    background: #fff; border-radius: 40px; padding: 8px 18px; font-size: 24px; font-weight: 700;
     color: var(--blue); box-shadow: 0 4px 0 rgba(78,110,138,.2); display: flex; gap: 6px; min-width: 110px; justify-content: center;
   }
   .cloud span { animation: dot 1s ease-in-out infinite; display: inline-block; }
@@ -102,9 +108,9 @@
 
   /* ---------- Moo box ---------- */
   .moo {
-    position: relative; width: 100%; margin-top: 18px; min-height: 76px;
+    position: relative; width: 100%; margin-top: 16px; min-height: 64px; flex-shrink: 0;
     background: var(--cream); border: 4px solid var(--blue); border-radius: 22px;
-    padding: 16px 20px; font-size: 20px; line-height: 1.4; text-align: center;
+    padding: 10px 18px; font-size: clamp(16px, 2.6dvh, 20px); line-height: 1.35; text-align: center;
     box-shadow: 0 6px 0 var(--blue);
     transition: transform .2s;
   }
@@ -122,9 +128,9 @@
   @keyframes blink { 50% { opacity: 0; } }
 
   /* ---------- Input ---------- */
-  form { width: 100%; margin-top: 22px; display: flex; gap: 10px; }
+  form { width: 100%; margin-top: clamp(12px, 2.5dvh, 22px); display: flex; gap: 10px; flex-shrink: 0; }
   input {
-    flex: 1; min-width: 0; font: inherit; font-size: 18px; padding: 14px 18px;
+    flex: 1; min-width: 0; font: inherit; font-size: 17px; padding: 12px 18px;
     border: 4px solid #fff; border-radius: 999px; background: #fff; color: var(--ink);
     outline: none; box-shadow: 0 5px 0 var(--pink-deep);
   }
@@ -138,15 +144,11 @@
   button:active { transform: translateY(4px); box-shadow: 0 1px 0 #a8336a; }
   button:disabled, input:disabled { opacity: .6; cursor: wait; }
 
-  .history { width: 100%; margin-top: 22px; display: flex; flex-direction: column; gap: 8px; }
-  .history .item { background: rgba(255,255,255,.55); border-radius: 14px; padding: 8px 14px; font-size: 14px; }
-  .history .q { color: var(--blue); font-weight: 600; }
 
   /* floating hearts / moos */
   .float { position: fixed; pointer-events: none; font-weight: 700; color: var(--pink-dark); animation: floatup 1.8s ease-out forwards; z-index: 10; }
   @keyframes floatup { 0% { opacity: 0; transform: translateY(0) scale(.6); } 15% { opacity: 1; } 100% { opacity: 0; transform: translateY(-160px) scale(1.2) rotate(var(--r)); } }
 
-  footer { margin-top: auto; padding: 16px; font-size: 13px; color: var(--blue); opacity: .8; }
 
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
@@ -179,20 +181,18 @@
     </div>
 
     <form id="form" autocomplete="off">
-      <input id="q" type="text" placeholder="Ask Stew a question…" maxlength="200" aria-label="Your question for Stew" autofocus>
+      <input id="q" type="text" enterkeyhint="send" placeholder="Ask Stew a question…" maxlength="200" aria-label="Your question for Stew">
       <button id="ask" type="submit">Ask</button>
     </form>
 
-    <div class="history" id="history"></div>
   </main>
 
-  <footer>🐄 made with love for Stew</footer>
 
 <script>
 (() => {
   const $ = id => document.getElementById(id);
   const stage = $('stage'), stew = $('stew'), mooBox = $('moo'), mooText = $('mooText'),
-        form = $('form'), input = $('q'), btn = $('ask'), ponderText = $('ponderText'), history = $('history');
+        form = $('form'), input = $('q'), btn = $('ask'), ponderText = $('ponderText');
 
   const ponders = [
     'hmm…', 'chewing on it…', 'consulting the grass…', 'thinking very hard…',
@@ -346,18 +346,12 @@
     await typeOut(a);
     setTimeout(() => stage.classList.remove('mooing'), 600);
 
-    const item = document.createElement('div');
-    item.className = 'item';
-    const qe = document.createElement('div'); qe.className = 'q'; qe.textContent = 'You: ' + q;
-    const ae = document.createElement('div'); ae.textContent = 'Stew: ' + a;
-    item.append(qe, ae);
-    history.prepend(item);
-    while (history.children.length > 5) history.lastChild.remove();
-
     input.value = '';
     busy = false; input.disabled = btn.disabled = false;
-    input.focus();
+    if (matchMedia('(pointer: fine)').matches) input.focus();
   });
+
+  if (matchMedia('(pointer: fine)').matches) input.focus();
 
   stew.addEventListener('click', () => {
     if (busy) return;
