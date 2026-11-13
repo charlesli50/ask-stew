@@ -89,22 +89,25 @@
 
   /* ---------- Thought bubble ---------- */
   .thought {
-    position: absolute; right: -14%; top: clamp(-84px, -10dvh, -50px); z-index: 2; opacity: 0; transform: scale(.6); transform-origin: 20% 100%;
+    position: absolute; left: 58%; bottom: calc(100% - 14px); z-index: 2;
+    opacity: 0; transform: scale(.6); transform-origin: 0% 100%;
     transition: opacity .25s, transform .3s cubic-bezier(.3,1.5,.5,1); pointer-events: none;
   }
   .stage.pondering .thought { opacity: 1; transform: scale(1); }
   .cloud {
-    background: #fff; border-radius: 40px; padding: 8px 18px; font-size: 24px; font-weight: 700;
-    color: var(--blue); box-shadow: 0 4px 0 rgba(78,110,138,.2); display: flex; gap: 6px; min-width: 110px; justify-content: center;
+    position: relative; width: 140px; padding: 8px 10px 9px; border-radius: 26px;
+    background: #fff; color: var(--blue); text-align: center;
+    box-shadow: 0 4px 0 rgba(78,110,138,.2);
   }
-  .cloud span { animation: dot 1s ease-in-out infinite; display: inline-block; }
-  .cloud span:nth-child(2) { animation-delay: .15s; }
-  .cloud span:nth-child(3) { animation-delay: .3s; }
-  @keyframes dot { 0%,100% { transform: translateY(0); opacity: .4; } 40% { transform: translateY(-8px); opacity: 1; } }
+  .dots { height: 14px; display: flex; justify-content: center; align-items: flex-end; gap: 5px; margin-bottom: 3px; }
+  .dots span { width: 7px; height: 7px; border-radius: 50%; background: var(--blue); animation: dot 1s ease-in-out infinite; }
+  .dots span:nth-child(2) { animation-delay: .15s; }
+  .dots span:nth-child(3) { animation-delay: .3s; }
+  @keyframes dot { 0%,100% { transform: translateY(0); opacity: .4; } 40% { transform: translateY(-6px); opacity: 1; } }
+  .ponder-text { font-size: 13px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .puff { position: absolute; background: #fff; border-radius: 50%; box-shadow: 0 3px 0 rgba(78,110,138,.2); }
-  .puff.p1 { width: 22px; height: 22px; left: 8px; bottom: -24px; }
-  .puff.p2 { width: 12px; height: 12px; left: -4px; bottom: -42px; }
-  .ponder-text { margin-top: 6px; font-size: 13px; color: var(--blue); text-align: center; background: rgba(255,255,255,.7); border-radius: 10px; padding: 2px 8px; }
+  .puff.p1 { width: 16px; height: 16px; left: 6px; bottom: -14px; }
+  .puff.p2 { width: 9px; height: 9px; left: -6px; bottom: -26px; }
 
   /* ---------- Moo box ---------- */
   .moo {
@@ -162,9 +165,11 @@
   <main>
     <div class="stage" id="stage">
       <div class="thought" aria-hidden="true">
-        <div class="cloud"><span>.</span><span>.</span><span>.</span></div>
-        <div class="puff p1"></div><div class="puff p2"></div>
-        <div class="ponder-text" id="ponderText">hmm…</div>
+        <div class="cloud">
+          <div class="dots"><span></span><span></span><span></span></div>
+          <div class="ponder-text" id="ponderText">hmm…</div>
+          <div class="puff p1"></div><div class="puff p2"></div>
+        </div>
       </div>
       <span class="sparkle s1">✨</span>
       <span class="sparkle s2">💙</span>
@@ -195,8 +200,8 @@
         form = $('form'), input = $('q'), btn = $('ask'), ponderText = $('ponderText');
 
   const ponders = [
-    'hmm…', 'chewing on it…', 'consulting the grass…', 'thinking very hard…',
-    'asking the other cows…', 'ruminating…', 'mooditating…', 'checking the barn…',
+    'hmm…', 'chewing on it…', 'asking the grass…', 'thinking hard…',
+    'asking other cows…', 'ruminating…', 'mooditating…', 'checking the barn…',
   ];
 
   const yes = [
